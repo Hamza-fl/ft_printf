@@ -1,23 +1,29 @@
-SRCS =	ft_printf.c ft_putaddr.c ft_putchar.c ft_puthex.c ft_putnbr.c ft_putnbr_u.c ft_putstr.c
-		
-OBJS = ${SRCS:.c=.o}
+SRC =	ft_printf.c ft_printf_utils.c
+SRCB = ft_printf_bonus.c ft_printf_utils_bonus_1.c ft_printf_utils_bonus_2.c
 NAME = libftprintf.a
-LIBC = ar rcs
 CC = cc
-RM = rm -f
-CFLAGS = -Wall -Wextra -Werror
+LCC = ar rcs
+FLAGS = -Wall -Wextra -Werror
 
-${NAME}: ${OBJS}
-	${LIBC} ${NAME} ${OBJS}
+OBJF = $(SRC:.c=.o)
 
-all: ${NAME}
+BOBJF = $(SRCB:.c=.o)
 
-clean:
-	${RM} ${OBJS}
+all : $(NAME)
 
-fclean: clean
-	${RM} ${NAME}
+$(NAME) : $(OBJF)
+	$(LCC) $(NAME) $^
 
-re: fclean all
+bonus: $(BOBJF)
+	$(LCC) $(NAME) $^
 
-.PHONY : all clean fclean re
+%.o : %.c $(HF)
+	$(CC) $(FLAGS) -c $< -o $@
+
+clean : 
+	rm -f $(OBJF) $(BOBJF)
+
+fclean : clean
+	rm -f $(NAME)
+
+re : fclean all

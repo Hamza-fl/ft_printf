@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_printf.c                                        :+:      :+:    :+:   */
+/*   ft_printf_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hfalati <hfalati@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 18:22:47 by hfalati           #+#    #+#             */
-/*   Updated: 2024/12/03 10:11:12 by hfalati          ###   ########.fr       */
+/*   Updated: 2024/12/03 10:42:23 by hfalati          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "ft_printf_bonus.h"
 
 int	ft_putchar(char c)
 {
@@ -45,26 +45,29 @@ int	ft_printf_for(char format, va_list ar)
 
 int	ft_printf(const char *str, ...)
 {
-	int		i;
+	t_flags	add;
 	va_list	ar;
-	int		count;
 
-	i = 0;
-	count = 0;
-	va_start (ar, str);
-	if (write (1, 0, 0) == -1)
+	if (write(1, 0, 0) == -1)
 		return (-1);
-	while (str[i])
+	add.i = 0;
+	add.count = 0;
+	va_start(ar, str);
+	while (str[add.i])
 	{
-		if (str[i] == '%')
+		if (str[add.i] == '%')
 		{
-			count += ft_printf_for(str[i + 1], ar);
-			i++;
+			(add.i)++;
+			if (str[add.i] == '#' || str[add.i] == '+' || str[add.i] == ' ')
+				add.count += ft_flag(ar, &(add.i), str);
+			else
+				add.count += ft_printf_for(str[add.i], ar);
 		}
 		else
-			count += ft_putchar(str[i]);
-		i++;
+			add.count += ft_putchar(str[add.i]);
+		if (str[add.i])
+			(add.i)++;
 	}
-	va_end (ar);
-	return (count);
+	va_end(ar);
+	return (add.count);
 }
